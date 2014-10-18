@@ -36,11 +36,11 @@
 			<span class="rating">{{item.value}}</span>
 			<span class="downvote" ng-click="downvote_item(this, item)">⬇</span>
 		</div>
-		<div class="image">
-			<a href="{{get_link(item)}}" target="_blank"><img ng-src="{{item.thumbnail}}" alt="{{item.external_id}}"></a>
-		</div>
+        <div class="image">
+            <a href="{{get_link(item)}}" target="_blank"><img ng-src="{{item.thumbnail}}" alt="{{item.external_id}}"></a>
+        </div>
 		<div class="info">
-			<h3>{{item.title}} [{{time_format(item.duration)}}]</h3>
+			<h3>{{item.title}}</h3>
 			<small>Added by: <span title="{{item.cid}}">{{item.nick}}</span></small>
 			<p>
 				<em>{{item.author}}</em><br>

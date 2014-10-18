@@ -67,7 +67,7 @@ app.controller('VideofeedCtrl', function($scope, $websocket, $rootScope, SERVER)
 				return;
 			}
 		}
-	}
+	};
 
 	websocket.register('media_item/delete/success', function(topic, body) {
 		$scope.delete_by_id(body.id);
@@ -119,7 +119,7 @@ app.controller('VideofeedCtrl', function($scope, $websocket, $rootScope, SERVER)
 
 	$scope.check_voted = function(id) {
 		return $scope.votes[id];
-	}
+	};
 
 	function addVote($scope, item, value, skip_send) {
 		$scope.votes[item.id] = value;

@@ -34,6 +34,30 @@ app.controller('SearchController', function($scope, $http, $rootScope) {
 		});
 	}
 
+    function searchYoutubePlaylist(query) {
+        return $http.get('https://www.googleapis.com/youtube/v3/search', {
+            params: {
+                part: 'snippet',
+                key: 'AIzaSyD2v5xyu8uXd6ER0xo35RWxfFLlTXezXZA',
+                maxResults: 20,
+                type: 'playlist',
+                q: query
+            }
+        }).then(function(res) {
+            var results = [];
+            angular.forEach(res.data.items, function(list) {
+                results.push({
+                    name: list.snippet.title,
+                    thumbnail: list.snippet.thumbnails.default.url,
+                    author: list.snippet.channelTitle,
+                    type: 'youtube_list',
+                    external_id: list.id.playlistId
+                });
+            });
+            return results;
+        });
+    }
+
 	function searchSoundcloud(query) {
 		return $http.get('http://api.soundcloud.com/tracks/', {
 			params: {
@@ -78,6 +102,8 @@ app.controller('SearchController', function($scope, $http, $rootScope) {
 		});
 	}
 
+
+
 	$scope.searchMedia = function(query) {
 		var result = null;
 		for (var type in regexes) {
@@ -92,6 +118,9 @@ app.controller('SearchController', function($scope, $http, $rootScope) {
 
 			case 'youtube':
 				return searchYoutube(query);
+
+            case 'youtube-list':
+                return searchYoutubePlaylist(query);
 
 			case 'soundcloud':
 				return searchSoundcloud(query);
@@ -112,7 +141,8 @@ app.controller('SearchController', function($scope, $http, $rootScope) {
 		} else {
 			return '';
 		}
-	}
+	};
+
 	$scope.searchTypePlaceholder = function() {
 		switch ($scope.searchType) {
 			case 'spotify':
@@ -121,6 +151,8 @@ app.controller('SearchController', function($scope, $http, $rootScope) {
 				return "Search for tracks on SoundCloud";
 			case 'youtube':
 				return "Search for YouTube videos";
+            case 'youtube-list':
+                return "Search for YouTube playlists";
 			default:
 				return 'Search for videos or music';
 		}
