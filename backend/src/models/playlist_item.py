@@ -15,7 +15,7 @@ VOTE_LIMIT = -2
 
 URL_MAP = {
     YOUTUBE_LIST: "https://gdata.youtube.com/feeds/api/playlists/%s?v=2&alt=json",
-    SPOTIFY_LIST: "",  # Spotify requires api key and authorization
+    SPOTIFY_LIST: "https://api.spotify.com/v1/users/%s",  # Spotify requires api key and authorization
 }
 
 
@@ -101,11 +101,16 @@ class PlaylistItem(BaseModel):
             raise PlaylistItemError("Item already exists")
 
         url = URL_MAP.get(media_type) % external_id
-        response = requests.get(url)
+
+        if "spotify" in media_type:
+            token = Auth.get_spotify_token().get("access_token")
+            headers = dict(Authorization=token)
+
+        response = requests.get(url, headers=headers)
         data = response.json()
 
         item = creator(item, data)
-        user = Auth.get_user(cid)
+        user = Auth.get_user_from_cid(cid)
         item.cid = cid
         if user:
             item.nick = user.get("nick", "")

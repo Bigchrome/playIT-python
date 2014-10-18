@@ -120,7 +120,7 @@ class MediaItem(BaseModel):
         data = response.json()
 
         item = creator(item, data)
-        user = Auth.get_user(cid)
+        user = Auth.get_user_from_cid(cid)
         item.cid = cid
         if user:
             item.nick = user.get("nick", "")

@@ -1,6 +1,6 @@
 __author__ = 'horv'
 
-from tornado import websocket, escape
+from tornado import websocket, escape, options
 import logging
 import json
 import re
@@ -11,9 +11,9 @@ import requests
 import functools
 from src.models.base import *
 from src.utils.memcache import *
+from src.utils.auth import Auth
 clients = set()
 
-TOKEN_CHECK_URL = "https://chalmers.it/auth/userInfo.php?token=%s"
 PLAYER_TOKEN = "42BabaYetuHerpaderp"
 ADMIN_GROUP = "playITAdmin"
 
@@ -53,9 +53,7 @@ class Authorized(object):
             user = RedisMemcache.get(token)
 
             if not user:
-                url = TOKEN_CHECK_URL % token
-                response = requests.get(url)
-                data = response.json()
+                data = Auth.get_user_from_token(token)
                 if data.get("cid"):
                     user = data
                     RedisMemcache.set("token:"+token, user)
